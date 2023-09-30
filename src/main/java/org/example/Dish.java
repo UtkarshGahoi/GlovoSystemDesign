@@ -2,7 +2,7 @@ package org.example;
 
 public class Dish {
     String dishName;
-    Double price;
+    static double price;
 
     public Dish(String dishName, Double price) {
         this.dishName = dishName;
@@ -17,11 +17,11 @@ public class Dish {
         this.dishName = dishName;
     }
 
-    public Double getPrice() {
-        return price;
-    }
-
     public void setPrice(Double price) {
         this.price = price;
+    }
+
+    public double getPrice() {
+        return price;
     }
 }

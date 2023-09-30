@@ -1,61 +1,48 @@
 package org.example;
 
+import org.example.impl.OrderServiceImpl;
+import org.example.impl.RestaurantServiceImpl;
+
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 // Press Shift twice to open the Search Everywhere dialog and type `show whitespaces`,
 // then press Enter. You can now see whitespace characters in your code.
 public class Main {
     public static void main(String[] args) {
+        RestaurantServiceImpl restaurantService=new RestaurantServiceImpl();
         User user=new User("utkarsh","utkershgahoi140@gmail.com","1234");
-        Dish dish=new Dish("palak paneer",128.0);
-        Dish dish1=new Dish("shahi paneer",233.0);
+
+        List<String> dishNames = Arrays.asList(
+                "Palak Paneer",
+                "Fries",
+                "Burger",
+                "Coke",
+                "Tiramisu",
+                "Plain Dal"
+        );
         List<Dish>dishes=new ArrayList<>();
-        dishes.add(dish1);
-        dishes.add(dish);
-        Address address=new Address("172","mahaveer ganj");
-        Restaurant restaurant=new Restaurant("asha bhojnalaya",address,dishes);
-        RestaurantList restaurantList=new RestaurantList();
-        restaurantList.addMenuToRestaurant(restaurant,dishes);
-
-        restaurantList.allRestaurants(restaurant);
-
-
-        User user1=new User("Rajershi","rajershi@gmail.com","1234");
-        Dish dish11=new Dish("masala chicken",128.0);
-        Dish dish12=new Dish("prons",233.0);
-        List<Dish>dishList=new ArrayList<>();
-        dishList.add(dish11);
-        dishList.add(dish12);
-        Address newaddress=new Address("173","mahaveer ganj");
-        Restaurant newrestaurant=new Restaurant("Bhai bhojnalaya",newaddress,dishList);
-        restaurantList.addMenuToRestaurant(newrestaurant,dishList);
-
-        restaurantList.allRestaurants(newrestaurant);
-
-
-        boolean b = User.validateAccount("rajershi@gmail.com", "1234444");
-        List<Restaurant> restaurantList2 = restaurantList.getRestaurantList();
-        System.out.println("here is the list"+restaurantList2.size());
-        for(Restaurant restaurant1:restaurantList2){
-            System.out.println(restaurant1.getName());
+        for (String name: dishNames) {
+            dishes.add(new Dish(name,100.0));
         }
-        System.out.println(b);
+        Address address=new Address("172","Mahaveer Ganj");
+        Restaurant restaurant=new Restaurant("Asha Bhojnalaya",address,dishes);
+        restaurantService.addRestaurant(restaurant);
+        restaurantService.addMenuToRestaurant(restaurant,dishes);
 
-//
-//        List<Dish> listForRestaurant = restaurantList.getListForRestaurant(restaurant);
-//        for(Dish dish2:listForRestaurant){
-//            System.out.println(dish2.getPrice());
-//            System.out.println(dish2.getDishName());
-//        }
-//        Cart cart=new Cart();
-//        cart.addItem(dish);
-//        cart.addItem(dish1);
-//        List<Dish> cart1 = cart.getCart();
-//        Order order=new Order();
-//        DebitCardPayment debitCardPayment=new DebitCardPayment("1234-5678-9012-3456", "12/25","utkarsh");
-//        order.placeOrder(cart1,address,restaurant,debitCardPayment);
+        Cart cart=new Cart();
+        for(Dish dish:dishes) {
+            cart.addItem(dish);
+        }
 
-
+        List<Dish> cart1 = cart.getCart();
+        DebitCardPayment debitCardPayment=new DebitCardPayment("1234-5678-9012-3456", "12/25","utkarsh");
+        PaymentContext paymentContext=new PaymentContext();
+        paymentContext.setPaymentStrategy(debitCardPayment);
+        OrderServiceImpl orderService=new OrderServiceImpl(paymentContext,cart1,restaurant);
+        Invoice invoice = orderService.makeOrder(user);
+        System.out.println("The restaurant name is "+invoice.restaurantName.getName()+ "\n"+
+                "The user who placed the order is "+invoice.user.getName());
     }
 }
