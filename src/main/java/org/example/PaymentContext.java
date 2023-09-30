@@ -8,6 +8,10 @@ public class PaymentContext {
     }
 
     public void processPayment(double amount) {
+<<<<<<< HEAD
+=======
+        System.out.println("The amount for the order is "+amount);
+>>>>>>> bb5aad9 (Glovo system design)
         paymentStrategy.pay(amount);
     }
 }
